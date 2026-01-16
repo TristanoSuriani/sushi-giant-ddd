@@ -2,5 +2,97 @@
 
 title Domain Model
 
+interface Session <<Sealed>>
+
+class None implements Session {
+}
+
+class NewSession implements Session {
+    - SessionId (1..1)
+    - Reservation (0..1)
+    - BeginTime (1..1)
+    - Table (0..n)
+}
+
+class Ordering implements Session {
+    - SessionId (1..1)
+    - BeginTime (1..1)
+    - Table (1..n)
+}
+
+class FinishedEating implements Session {
+    - SessionId (1..1)
+    - BeginTime (1..1)
+    - EndTime (1..1)
+    - Table (1..n)
+}
+
+class Ended implements Session {
+    - SessionId (1..1)
+    - BeginTime (1..1)
+    - EndTime (1..1)
+    - Payment (0..1)
+    - EndSessionType (1..1)
+}
+
+class Reservation {
+    - Name (1..1)
+    - TelephoneNumber (1..1)
+    - EMail (1..1)
+    - NumberOfPeople (1..1)
+}
+
+class OrderedItem {
+    - OrderedItemId (1..1)
+    - OrderedItemType (1..1)
+    - OrderedItemStatus (1..1)
+}
+
+class Round {
+    - RoundId (1..1)
+    - Order (0..n)
+}
+
+class Table {
+    - TableId (1..1)
+    - OrderedItem (0..n)
+    - Round (0..n)
+    - NumberOfAdults (0..n)
+    - NumberOfChildren (0..n)
+    - NumberOfSeniors (0..n)
+}
+
+class Payment {
+    - TotalDue (1..1)
+    - Discount (0..1)
+}
+
+enum OrderedItemStatus {
+    DRAFT,
+    SUBMITTED
+}
+
+enum OrderedItemType {
+    DRINK,
+    FOOD,
+    DESSERT
+}
+
+enum EndSessionType {
+    COMPLETED_WITH_PAYMENT
+    CUSTOMER_LEFT
+    CUSTOMER_SENT_AWAY
+}
+
+Session -up-> Table
+Session -up-> Reservation
+Session -up-> Round
+Session -up-> Payment
+Session -up-> EndSessionType
+Table -up-> Order
+OrderedItem -up-> OrderedItemStatus
+OrderedItem -up-> OrderedItemType
+Round -up-> OrderedItem
+
 
 @enduml
